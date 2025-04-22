@@ -173,7 +173,7 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
   };
   
   return (
-    <div className="seat-selection-container p-6 bg-white rounded-lg shadow-lg">
+    <div className="seat-selection-container p-6 bg-white rounded-lg shadow-lg max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-neutral-800">Select Your Seats</h2>
         <div className="text-sm text-neutral-600">
@@ -209,7 +209,7 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
       </div>
       
       <div className="seating-layout mb-6">
-        <div className="seat-legend flex items-center space-x-4 mb-4">
+        <div className="seat-legend flex flex-wrap items-center gap-4 mb-4">
           <div className="flex items-center">
             <div className="w-6 h-6 bg-neutral-100 border border-neutral-200 rounded mr-2"></div>
             <span className="text-sm">Available</span>
@@ -228,7 +228,7 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
           </div>
         </div>
         
-        <div className="airplane-body bg-neutral-50 p-6 rounded-lg">
+        <div className="airplane-body bg-neutral-50 p-6 rounded-lg overflow-auto max-h-[400px]">
           <div className="airplane-front flex justify-center mb-4 pb-4 border-b border-dashed border-neutral-300">
             <div className="cockpit w-20 h-10 bg-neutral-200 rounded-t-full flex items-center justify-center text-sm font-medium">
               Front
@@ -244,7 +244,7 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
           {/* Economy class section */}
           <div className="economy-class">
             <div className="text-center mb-3 text-sm font-medium text-blue-600">Economy Class</div>
-            <div className="seats-grid overflow-y-auto max-h-96">{renderSeatingLayout().slice(2)}</div>
+            <div className="seats-grid">{renderSeatingLayout().slice(2)}</div>
           </div>
         </div>
       </div>
@@ -266,7 +266,8 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
         </div>
       </div>
       
-      <div className="flex justify-between">
+      {/* Fixed position action buttons */}
+      <div className="sticky bottom-0 pt-4 pb-4 bg-white flex justify-between">
         <Button 
           variant="outline" 
           onClick={onBack}
@@ -279,6 +280,7 @@ const SeatSelection: React.FC<SeatSelectionProps> = ({ flight, onProceed, onBack
           onClick={() => onProceed(selectedSeats)} 
           disabled={selectedSeats.length === 0}
           className="bg-gradient-to-r from-[#FF9933] to-[#FFB366] hover:from-[#F08620] hover:to-[#FF9933]"
+          size="lg"
         >
           Proceed to Payment
         </Button>
