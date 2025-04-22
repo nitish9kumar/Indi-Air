@@ -56,10 +56,22 @@ const BookingWizard: React.FC = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: FormValues) => {
-      const response = await apiRequest("POST", "/api/bookings", data);
+      // Format the date as a simple ISO string before sending
+      const formattedData = {
+        ...data,
+        departureDate: data.departureDate.toISOString(),
+      };
+      
+      console.log("Sending formatted data:", formattedData);
+      const response = await apiRequest("POST", "/api/bookings", formattedData);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || errorData.message || 'Failed to search flights');
+      }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Search successful:", data);
       toast({
         title: "Search initiated!",
         description: "We're finding the best flights for you.",
@@ -75,9 +87,10 @@ const BookingWizard: React.FC = () => {
       });
     },
     onError: (error) => {
+      console.error("Search error:", error);
       toast({
         title: "Something went wrong",
-        description: error.message,
+        description: error instanceof Error ? error.message : 'An unknown error occurred',
         variant: "destructive",
       });
     },

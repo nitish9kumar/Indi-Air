@@ -43,7 +43,10 @@ export const passengers = z.object({
 });
 
 export const bookingSchema = insertBookingSchema.extend({
-  departureDate: z.string(),
+  // Accept both string and date for departure date
+  departureDate: z.string().or(z.date()).transform(val => 
+    typeof val === 'string' ? val : val.toISOString().split('T')[0]
+  ),
   passengers: passengers,
 });
 

@@ -22,38 +22,34 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <Link href="/">
-              <a className="flex items-center">
-                <AirlineLogo />
-              </a>
+            <Link href="/" className="flex items-center">
+              <AirlineLogo />
             </Link>
           </div>
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/">
-              <a className="font-medium hover:text-[#FF9933] transition-colors">Home</a>
+            <Link href="/" className="font-medium hover:text-[#FF9933] transition-colors">
+              Home
             </Link>
-            <Link href="/destinations">
-              <a className="font-medium hover:text-[#FF9933] transition-colors">Destinations</a>
+            <Link href="/destinations" className="font-medium hover:text-[#FF9933] transition-colors">
+              Destinations
             </Link>
-            <Link href="/offers">
-              <a className="font-medium hover:text-[#FF9933] transition-colors">Offers</a>
+            <Link href="/offers" className="font-medium hover:text-[#FF9933] transition-colors">
+              Offers
             </Link>
-            <Link href="/about">
-              <a className="font-medium hover:text-[#FF9933] transition-colors">About Us</a>
+            <Link href="/about" className="font-medium hover:text-[#FF9933] transition-colors">
+              About Us
             </Link>
-            <Link href="/contact">
-              <a className="font-medium hover:text-[#FF9933] transition-colors">Contact</a>
+            <Link href="/contact" className="font-medium hover:text-[#FF9933] transition-colors">
+              Contact
             </Link>
           </nav>
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            <Link href="/profile">
-              <a className="hidden md:flex text-[#4361EE] hover:text-[#FF9933] transition-colors">
-                <User className="h-5 w-5" />
-              </a>
+            <Link href="/profile" className="hidden md:flex text-[#4361EE] hover:text-[#FF9933] transition-colors">
+              <User className="h-5 w-5" />
             </Link>
             <Link href="/login">
               <Button
@@ -80,20 +76,20 @@ const Header: React.FC = () => {
         <div className="md:hidden bg-white">
           <div className="px-4 py-5 border-t">
             <nav className="flex flex-col space-y-4">
-              <Link href="/">
-                <a className="font-medium hover:text-[#FF9933] transition-colors">Home</a>
+              <Link href="/" className="font-medium hover:text-[#FF9933] transition-colors">
+                Home
               </Link>
-              <Link href="/destinations">
-                <a className="font-medium hover:text-[#FF9933] transition-colors">Destinations</a>
+              <Link href="/destinations" className="font-medium hover:text-[#FF9933] transition-colors">
+                Destinations
               </Link>
-              <Link href="/offers">
-                <a className="font-medium hover:text-[#FF9933] transition-colors">Offers</a>
+              <Link href="/offers" className="font-medium hover:text-[#FF9933] transition-colors">
+                Offers
               </Link>
-              <Link href="/about">
-                <a className="font-medium hover:text-[#FF9933] transition-colors">About Us</a>
+              <Link href="/about" className="font-medium hover:text-[#FF9933] transition-colors">
+                About Us
               </Link>
-              <Link href="/contact">
-                <a className="font-medium hover:text-[#FF9933] transition-colors">Contact</a>
+              <Link href="/contact" className="font-medium hover:text-[#FF9933] transition-colors">
+                Contact
               </Link>
               <Link href="/login">
                 <Button className="w-full bg-[#4361EE] text-white hover:bg-[#4361EE]/90">

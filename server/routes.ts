@@ -11,10 +11,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Flight booking endpoint
   app.post("/api/bookings", async (req: Request, res: Response) => {
     try {
+      // Log received data for debugging
+      console.log("Received booking data:", req.body);
+      
+      // Format the departure date properly
+      let formattedDate = req.body.departureDate;
+      
+      // Check if departureDate is a Date object and convert it
+      if (req.body.departureDate && typeof req.body.departureDate === 'object' && req.body.departureDate instanceof Date) {
+        formattedDate = req.body.departureDate.toISOString().split('T')[0];
+      } else if (req.body.departureDate && typeof req.body.departureDate === 'string') {
+        // If it's already a string, keep it as is
+        formattedDate = req.body.departureDate;
+      }
+      
       // Validate the request body
       const validatedData = bookingSchema.parse({
         ...req.body,
-        departureDate: req.body.departureDate.toISOString().split('T')[0], // Convert date to string
+        departureDate: formattedDate,
         userId: req.body.userId || null, // Make userId optional
       });
       
@@ -41,9 +55,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      console.error("Error processing booking:", error);
       return res.status(500).json({ 
         success: false, 
-        message: "Server error" 
+        message: "Server error", 
+        error: error instanceof Error ? error.message : String(error)
       });
     }
   });
