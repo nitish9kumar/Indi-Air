@@ -30,21 +30,27 @@ interface PaymentPageProps {
   onComplete: (paymentDetails: PaymentFormValues) => void;
 }
 
-// Define validation schema
+// Define validation schema - simplified for demo purposes
 const paymentFormSchema = z.object({
-  paymentMethod: z.enum(["creditCard", "debitCard", "netBanking", "wallet"]),
-  cardholderName: z.string().min(3, "Name must be at least 3 characters"),
-  cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits"),
-  expiryMonth: z.string().min(1, "Please select month"),
-  expiryYear: z.string().min(1, "Please select year"),
-  cvv: z.string().regex(/^\d{3}$/, "CVV must be 3 digits"),
+  paymentMethod: z.enum(["creditCard", "debitCard", "netBanking", "wallet"]).default("creditCard"),
+  cardholderName: z.string().min(1, "Name is required").default(""),
+  cardNumber: z.string().min(1, "Card number is required").default(""),
+  expiryMonth: z.string().default(""),
+  expiryYear: z.string().default(""),
+  cvv: z.string().default(""),
   saveCard: z.boolean().optional(),
   billingAddress: z.object({
-    street: z.string().min(1, "Street address is required"),
-    city: z.string().min(1, "City is required"),
-    state: z.string().min(1, "State is required"),
-    zipCode: z.string().regex(/^\d{6}$/, "ZIP code must be 6 digits"),
-    country: z.string().min(1, "Country is required"),
+    street: z.string().default(""),
+    city: z.string().default(""),
+    state: z.string().default(""),
+    zipCode: z.string().default(""),
+    country: z.string().default("India"),
+  }).default({
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "India"
   }),
 });
 
@@ -95,6 +101,38 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
         description: "Your booking has been confirmed!",
       });
     }, 2000);
+  };
+  
+  // For demo purposes - allow completing payment regardless of form state
+  const handleQuickPayment = () => {
+    const demoData: PaymentFormValues = {
+      paymentMethod: "creditCard",
+      cardholderName: "John Doe",
+      cardNumber: "4111111111111111",
+      expiryMonth: "12",
+      expiryYear: "2025",
+      cvv: "123",
+      billingAddress: {
+        street: "123 Main Street",
+        city: "Mumbai",
+        state: "Maharashtra",
+        zipCode: "400001",
+        country: "India",
+      }
+    };
+    
+    setIsProcessing(true);
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      setIsProcessing(false);
+      onComplete(demoData);
+      
+      toast({
+        title: "Demo Payment Successful",
+        description: "Your booking has been confirmed!",
+      });
+    }, 1000);
   };
   
   // Generate months
@@ -380,7 +418,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
           </div>
           
           {/* Fixed position action buttons */}
-          <div className="sticky bottom-0 pt-4 pb-4 bg-white flex justify-between">
+          <div className="sticky bottom-0 pt-4 pb-4 bg-white flex flex-wrap gap-2 justify-between">
             <Button 
               type="button"
               variant="outline" 
@@ -391,14 +429,25 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
               Back
             </Button>
             
-            <Button 
-              type="submit" 
-              disabled={isProcessing}
-              className="bg-gradient-to-r from-[#FF9933] to-[#FFB366] hover:from-[#F08620] hover:to-[#FF9933]"
-              size="lg"
-            >
-              {isProcessing ? "Processing..." : "Complete Payment"}
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                type="button" 
+                onClick={handleQuickPayment}
+                disabled={isProcessing}
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              >
+                Quick Demo Pay
+              </Button>
+              
+              <Button 
+                type="submit" 
+                disabled={isProcessing}
+                className="bg-gradient-to-r from-[#FF9933] to-[#FFB366] hover:from-[#F08620] hover:to-[#FF9933]"
+                size="lg"
+              >
+                {isProcessing ? "Processing..." : "Complete Payment"}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
