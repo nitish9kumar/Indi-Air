@@ -67,7 +67,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   };
 
   return (
-    <div className="booking-confirmation-container p-6 bg-white rounded-lg shadow-lg">
+    <div className="booking-confirmation-container p-6 bg-white rounded-lg shadow-lg max-w-5xl mx-auto">
       <div className="text-center mb-8">
         <div className="inline-block p-4 bg-green-100 rounded-full mb-4">
           <svg
