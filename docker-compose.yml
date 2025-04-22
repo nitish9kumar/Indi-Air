@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  # Node.js application
+  app:
+    build: .
+    container_name: indiair-app
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgres://indiair:indiairpassword@db:5432/indiair
+      - NODE_ENV=production
+      # Uncomment and add your Stripe keys if needed
+      # - STRIPE_SECRET_KEY=your_stripe_secret_key
+      # - VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - indiair-network
+
+  # PostgreSQL database
+  db:
+    image: postgres:14-alpine
+    container_name: indiair-db
+    environment:
+      - POSTGRES_USER=indiair
+      - POSTGRES_PASSWORD=indiairpassword
+      - POSTGRES_DB=indiair
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - indiair-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  indiair-network:
+    driver: bridge
