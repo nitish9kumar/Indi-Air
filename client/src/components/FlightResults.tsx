@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { format, addHours, addMinutes } from "date-fns";
 import { TiPlane } from "react-icons/ti";
 import { INDIA_COLORS } from "@/lib/constants";
+import SeatSelection from "./SeatSelection";
+import PaymentPage, { PaymentFormValues } from "./PaymentPage";
+import BookingConfirmation from "./BookingConfirmation";
 
 interface Flight {
   id: number;
@@ -88,6 +91,9 @@ const generateFlights = (source: string, destination: string, departureDate: str
   return flights.sort((a, b) => a.price - b.price);
 };
 
+// Adding booking steps management
+type BookingStep = 'flights' | 'seats' | 'payment' | 'confirmation';
+
 const FlightResults: React.FC<FlightResultsProps> = ({ 
   source, 
   destination, 
@@ -95,6 +101,87 @@ const FlightResults: React.FC<FlightResultsProps> = ({
   onClose
 }) => {
   const flights = generateFlights(source, destination, departureDate);
+  const [currentStep, setCurrentStep] = useState<BookingStep>('flights');
+  const [selectedFlight, setSelectedFlight] = useState<Flight & { source: string; destination: string } | null>(null);
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [paymentDetails, setPaymentDetails] = useState<PaymentFormValues | null>(null);
+  
+  const handleBookNow = (flight: Flight) => {
+    setSelectedFlight({
+      ...flight,
+      source,
+      destination
+    });
+    setCurrentStep('seats');
+  };
+  
+  const handleSeatSelection = (seats: string[]) => {
+    setSelectedSeats(seats);
+    
+    // Calculate the total amount based on the selected seats and flight
+    const businessClassSeats = seats.filter(seatId => {
+      const row = parseInt(seatId.match(/\d+/)?.[0] || "0");
+      return row <= 2;
+    }).length;
+    
+    const economySeats = seats.length - businessClassSeats;
+    const total = selectedFlight ? 
+      (businessClassSeats * selectedFlight.price * 3) + (economySeats * selectedFlight.price) : 
+      0;
+    
+    setTotalAmount(total);
+    setCurrentStep('payment');
+  };
+  
+  const handlePaymentComplete = (details: PaymentFormValues) => {
+    setPaymentDetails(details);
+    setCurrentStep('confirmation');
+  };
+  
+  const handleBookAnother = () => {
+    setCurrentStep('flights');
+    setSelectedFlight(null);
+    setSelectedSeats([]);
+    setTotalAmount(0);
+    setPaymentDetails(null);
+    onClose();
+  };
+  
+  // Render the appropriate step
+  if (currentStep === 'seats' && selectedFlight) {
+    return (
+      <SeatSelection 
+        flight={selectedFlight} 
+        onProceed={handleSeatSelection}
+        onBack={() => setCurrentStep('flights')}
+      />
+    );
+  }
+  
+  if (currentStep === 'payment' && selectedFlight) {
+    return (
+      <PaymentPage 
+        flight={selectedFlight}
+        selectedSeats={selectedSeats}
+        totalAmount={totalAmount}
+        onBack={() => setCurrentStep('seats')}
+        onComplete={handlePaymentComplete}
+      />
+    );
+  }
+  
+  if (currentStep === 'confirmation' && selectedFlight && paymentDetails) {
+    return (
+      <BookingConfirmation 
+        flight={selectedFlight}
+        selectedSeats={selectedSeats}
+        totalAmount={totalAmount}
+        paymentDetails={paymentDetails}
+        onBookAnother={handleBookAnother}
+      />
+    );
+  }
 
   return (
     <div className="flight-results bg-white p-6 rounded-lg shadow-lg">
@@ -158,7 +245,10 @@ const FlightResults: React.FC<FlightResultsProps> = ({
               
               <div className="booking-info text-right">
                 <div className="price text-2xl font-bold text-[#138808]">₹{flight.price.toLocaleString()}</div>
-                <Button className="mt-2 bg-gradient-to-r from-[#FF9933] to-[#FFB366] hover:from-[#F08620] hover:to-[#FF9933]">
+                <Button 
+                  className="mt-2 bg-gradient-to-r from-[#FF9933] to-[#FFB366] hover:from-[#F08620] hover:to-[#FF9933]"
+                  onClick={() => handleBookNow(flight)}
+                >
                   Book Now
                 </Button>
               </div>
