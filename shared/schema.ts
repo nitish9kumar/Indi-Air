@@ -1,6 +1,7 @@
 import { pgTable, text, serial, integer, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 // Users schema from existing file
 export const users = pgTable("users", {
@@ -8,6 +9,11 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
+
+// Define relations for users
+export const usersRelations = relations(users, ({ many }) => ({
+  bookings: many(bookings),
+}));
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -24,9 +30,17 @@ export const bookings = pgTable("bookings", {
   destination: text("destination").notNull(),
   departureDate: text("departure_date").notNull(),
   passengers: jsonb("passengers").notNull(),
-  userId: integer("user_id"),
+  userId: integer("user_id").references(() => users.id),
   createdAt: text("created_at").notNull(),
 });
+
+// Define relations for bookings
+export const bookingsRelations = relations(bookings, ({ one }) => ({
+  user: one(users, {
+    fields: [bookings.userId],
+    references: [users.id],
+  }),
+}));
 
 export const insertBookingSchema = createInsertSchema(bookings).pick({
   source: true,
