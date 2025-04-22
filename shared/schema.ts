@@ -10,11 +10,6 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
 });
 
-// Define relations for users
-export const usersRelations = relations(users, ({ many }) => ({
-  bookings: many(bookings),
-}));
-
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -34,7 +29,11 @@ export const bookings = pgTable("bookings", {
   createdAt: text("created_at").notNull(),
 });
 
-// Define relations for bookings
+// Define relations
+export const usersRelations = relations(users, ({ many }) => ({
+  bookings: many(bookings),
+}));
+
 export const bookingsRelations = relations(bookings, ({ one }) => ({
   user: one(users, {
     fields: [bookings.userId],
