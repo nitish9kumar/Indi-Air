@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { DEPARTURE_CITIES, ARRIVAL_CITIES } from "@/lib/constants";
+import FlightResults from "./FlightResults";
 
 const formSchema = z.object({
   source: z.string().min(1, "Departure city is required"),
@@ -40,6 +41,12 @@ type FormValues = z.infer<typeof formSchema>;
 const BookingWizard: React.FC = () => {
   const { toast } = useToast();
   const [showPassengersDropdown, setShowPassengersDropdown] = useState(false);
+  const [showFlightResults, setShowFlightResults] = useState(false);
+  const [searchParams, setSearchParams] = useState<{
+    source: string;
+    destination: string;
+    departureDate: string;
+  } | null>(null);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -73,18 +80,17 @@ const BookingWizard: React.FC = () => {
     onSuccess: (data) => {
       console.log("Search successful:", data);
       toast({
-        title: "Search initiated!",
-        description: "We're finding the best flights for you.",
+        title: "Search complete!",
+        description: "We found some flights for your journey.",
       });
-      form.reset({
-        source: "",
-        destination: "",
-        passengers: {
-          adults: 1,
-          children: 0,
-          infants: 0,
-        },
+      
+      // Save search parameters and show flight results
+      setSearchParams({
+        source: form.getValues("source"),
+        destination: form.getValues("destination"),
+        departureDate: form.getValues("departureDate").toISOString(),
       });
+      setShowFlightResults(true);
     },
     onError: (error) => {
       console.error("Search error:", error);
@@ -119,6 +125,32 @@ const BookingWizard: React.FC = () => {
     return `${total} Passengers`;
   };
 
+  const handleNewSearch = () => {
+    setShowFlightResults(false);
+    form.reset({
+      source: "",
+      destination: "",
+      passengers: {
+        adults: 1,
+        children: 0,
+        infants: 0,
+      },
+    });
+  };
+
+  // Show flight results if a successful search has been made
+  if (showFlightResults && searchParams) {
+    return (
+      <FlightResults
+        source={searchParams.source}
+        destination={searchParams.destination}
+        departureDate={searchParams.departureDate}
+        onClose={handleNewSearch}
+      />
+    );
+  }
+
+  // Otherwise show the booking form
   return (
     <div className="booking-wizard max-w-5xl mx-auto w-full p-6 md:p-8 bg-white bg-opacity-95 rounded-lg shadow-lg backdrop-blur-sm">
       <Form {...form}>
