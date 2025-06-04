@@ -57,3 +57,82 @@
   }
 }
 
+/* Flight Results Page Styles */
+.flight-results {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.flight-results h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #ff9933;
+}
+
+.flight-results h4 span {
+  font-weight: bold;
+  color: #ff9933;
+}
+
+/* Updated Flight Results Page Styles for Full-Width Cards with Rounded Corners */
+.flight-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  padding: 0 10px; /* Reduce left and right spaces */
+}
+
+.flight-card {
+  width: 100%;
+  max-width: 800px; /* Increase max width for better utilization */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px; /* Add rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.flight-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.flight-card h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #ff9933; 
+}
+
+.flight-card p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.flight-card p span {
+  font-weight: bold;
+  color: #ff9933;
+}
+
+.flight-card .price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #28a745;
+  margin-top: 20px;
+  text-align: right; /* Align price to the right */
+}
+
+.select-flight-button {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff9933; 
+}
+
+.select-flight-button:hover {
+  color: #28a745; 
+}
+

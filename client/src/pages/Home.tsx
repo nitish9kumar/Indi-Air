@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Header from "@/components/Header";
 import HeroSlider from "@/components/HeroSlider";
 import Services from "@/components/Services";
@@ -10,13 +10,19 @@ import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 
 const Home: React.FC = () => {
+  const [user, setUser] = useState<string | null>(null);
+  useEffect(() => {
+    localStorage.setItem('pageName', 'Home Page');
+    const loggedUser = localStorage.getItem("loggedInUser");
+    setUser(loggedUser);
+  }, []);
   return (
     <div className="min-h-screen">
       <Header />
       <main>
-        <HeroSlider />
+        <HeroSlider user={user}/>
         <Services />
-        <Destinations />
+        <Destinations user={user} />
         <Offers />
         <Promotion />
         <Testimonials />

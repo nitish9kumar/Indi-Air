@@ -18,10 +18,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { apiRequest } from "@/lib/queryClient";
-import { useMutation } from "@tanstack/react-query";
-import { DEPARTURE_CITIES, ARRIVAL_CITIES } from "@/lib/constants";
-import FlightResults from "./FlightResults";
+import { useNavigate } from "react-router-dom";
+import { DEPARTURE_CITIES, ARRIVAL_CITIES, DEMO_FLIGHTS } from "@/lib/constants";
+import { pushToDataLayer } from '../utils/dataLayer';
+
 
 const formSchema = z.object({
   source: z.string().min(1, "Departure city is required"),
@@ -40,8 +40,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 const BookingWizard: React.FC = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [showPassengersDropdown, setShowPassengersDropdown] = useState(false);
-  const [showFlightResults, setShowFlightResults] = useState(false);
   const [searchParams, setSearchParams] = useState<{
     source: string;
     destination: string;
@@ -61,49 +61,31 @@ const BookingWizard: React.FC = () => {
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: FormValues) => {
-      // Format the date as a simple ISO string before sending
-      const formattedData = {
-        ...data,
-        departureDate: data.departureDate.toISOString(),
-      };
-      
-      console.log("Sending formatted data:", formattedData);
-      const response = await apiRequest("POST", "/api/bookings", formattedData);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || errorData.message || 'Failed to search flights');
-      }
-      return response.json();
-    },
-    onSuccess: (data) => {
-      console.log("Search successful:", data);
-      toast({
-        title: "Search complete!",
-        description: "We found some flights for your journey.",
-      });
-      
-      // Save search parameters and show flight results
-      setSearchParams({
-        source: form.getValues("source"),
+  const handleSubmit = (data: FormValues) => {
+    // add data into data layer
+    // added for re reinitialized on search
+    window.dataLayer = [];
+    pushToDataLayer({ 
+      event:"flightsearch",
+      flightContext:{
+        tripType: "one-way",  // or "round-trip", "multi-city"
+        origin: form.getValues("source"),
         destination: form.getValues("destination"),
         departureDate: form.getValues("departureDate").toISOString(),
-      });
-      setShowFlightResults(true);
-    },
-    onError: (error) => {
-      console.error("Search error:", error);
-      toast({
-        title: "Something went wrong",
-        description: error instanceof Error ? error.message : 'An unknown error occurred',
-        variant: "destructive",
-      });
-    },
-  });
+        returnDate: "",
+        passengerCount: form.getValues("passengers"),
+        cabinClass: "economy",
+      }
+    });
 
-  const handleSubmit = (data: FormValues) => {
-    mutate(data);
+    // Navigate to dummy flight results page
+    navigate('/flight-results', {
+      state: {
+        source: form.getValues("source"),
+        destination: form.getValues("destination"),
+        flights: DEMO_FLIGHTS,
+      },
+    });
   };
   
   // Helper to increment/decrement passenger counts
@@ -126,7 +108,6 @@ const BookingWizard: React.FC = () => {
   };
 
   const handleNewSearch = () => {
-    setShowFlightResults(false);
     form.reset({
       source: "",
       destination: "",
@@ -138,19 +119,6 @@ const BookingWizard: React.FC = () => {
     });
   };
 
-  // Show flight results if a successful search has been made
-  if (showFlightResults && searchParams) {
-    return (
-      <FlightResults
-        source={searchParams.source}
-        destination={searchParams.destination}
-        departureDate={searchParams.departureDate}
-        onClose={handleNewSearch}
-      />
-    );
-  }
-
-  // Otherwise show the booking form
   return (
     <div className="booking-wizard max-w-5xl mx-auto w-full p-6 md:p-8 bg-white bg-opacity-95 rounded-lg shadow-lg backdrop-blur-sm">
       <Form {...form}>
@@ -365,11 +333,10 @@ const BookingWizard: React.FC = () => {
           <div className="flex justify-center">
             <Button 
               type="submit" 
-              disabled={isPending}
               className="bg-gradient-to-r from-[#FF9933] to-[#FFB366] text-white font-medium px-8 py-6 rounded-lg shadow-lg transition-all transform hover:scale-105 hover:from-[#F08620] hover:to-[#FF9933]"
             >
               <Search className="mr-2 h-5 w-5" />
-              {isPending ? "Searching..." : "Search Flights"}
+              Search Flights
             </Button>
           </div>
         </form>

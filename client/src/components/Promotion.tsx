@@ -38,7 +38,7 @@ const Promotion: React.FC = () => {
             </div>
             <div className="w-full md:w-1/2 relative">
               <img
-                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                src="https://www.qatarairways.com/content/dam/images/renditions/square/campaigns/global/formula1/s-f1-early-bird-2025.jpg"
                 alt="Mobile App"
                 className="w-full h-full object-cover"
               />

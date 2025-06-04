@@ -3,10 +3,18 @@ import AirlineLogo from "./AirlineLogo";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
 import { Link } from "wouter";
+import { useLocation } from "react-router-dom";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  pageTitle?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+  const location = useLocation();
+  const { state } = location;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,8 +25,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const user = localStorage.getItem("loggedInUser");
+    setLoggedInUser(user);
+  }, []);
+
+  
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-md py-2" : "bg-white/90 backdrop-blur-sm py-3"}`}>
+    <header className={pageTitle? `z-50 transition-none bg-transparent text-black  py-3`:`absolute fixed w-full z-50 transition-none bg-transparent text-white py-3`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -48,17 +62,20 @@ const Header: React.FC = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            <Link href="/profile" className="hidden md:flex text-[#4361EE] hover:text-[#FF9933] transition-colors">
+            {loggedInUser && <span className="hidden md:flex text-[#FFFFFF]">Welcome, {loggedInUser}!</span>}
+            <Link href="/profile" className="hidden md:flex text-[#FFFFFF] hover:text-[#FF9933] transition-colors">
               <User className="h-5 w-5" />
             </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="hidden md:inline-flex border border-[#4361EE] text-[#4361EE] hover:bg-[#4361EE] hover:text-white"
-              >
-                Login
-              </Button>
-            </Link>
+            {!loggedInUser && (
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  className="hidden md:inline-flex border border-[#4361EE] text-[#4361EE] hover:bg-[#4361EE] hover:text-white"
+                >
+                  Login
+                </Button>
+              </Link>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -76,26 +93,29 @@ const Header: React.FC = () => {
         <div className="md:hidden bg-white">
           <div className="px-4 py-5 border-t">
             <nav className="flex flex-col space-y-4">
-              <Link href="/" className="font-medium hover:text-[#FF9933] transition-colors">
+              <Link href="/" className="font-medium hover:text-[#FF9933] transition-colors text-black">
                 Home
               </Link>
-              <Link href="/destinations" className="font-medium hover:text-[#FF9933] transition-colors">
+              <Link href="/destinations" className="font-medium hover:text-[#FF9933] transition-colors text-black">
                 Destinations
               </Link>
-              <Link href="/offers" className="font-medium hover:text-[#FF9933] transition-colors">
+              <Link href="/offers" className="font-medium hover:text-[#FF9933] transition-colors text-black">
                 Offers
               </Link>
-              <Link href="/about" className="font-medium hover:text-[#FF9933] transition-colors">
+              <Link href="/about" className="font-medium hover:text-[#FF9933] transition-colors text-black">
                 About Us
               </Link>
-              <Link href="/contact" className="font-medium hover:text-[#FF9933] transition-colors">
+              <Link href="/contact" className="font-medium hover:text-[#FF9933] transition-colors text-black">
                 Contact
               </Link>
-              <Link href="/login">
-                <Button className="w-full bg-[#4361EE] text-white hover:bg-[#4361EE]/90">
-                  Login
-                </Button>
-              </Link>
+              {loggedInUser && <span className="text-[#4361EE]">Welcome, {loggedInUser}!</span>}
+              {!loggedInUser && (
+                <Link href="/login">
+                  <Button className="w-full bg-[#4361EE] text-white hover:bg-[#4361EE]/90">
+                    Login
+                  </Button>
+                </Link>
+              )}
             </nav>
           </div>
         </div>

@@ -20,7 +20,7 @@ const offers: Offer[] = [
     id: 1,
     title: "Diwali Special",
     description: "Celebrate the festival of lights with special fares on international flights.",
-    image: "https://images.unsplash.com/photo-1499063078284-f78f7d89616a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    image: "https://www.qatarairways.com/content/dam/images/renditions/square/campaigns/global/formula1/s-f1-early-bird-2025.jpg",
     badge: {
       text: "20% OFF",
       color: "bg-[#FF9933]",
@@ -31,7 +31,7 @@ const offers: Offer[] = [
     id: 2,
     title: "Business Class Upgrade",
     description: "Upgrade to business class for just ₹15,000 on select international routes.",
-    image: "https://images.unsplash.com/photo-1540339832862-474599807836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    image: "https://www.qatarairways.com/content/dam/images/renditions/square/campaigns/qatar/visit-qatar/s-qatar-stopver-beach-800.jpg",
     badge: {
       text: "PREMIUM",
       color: "bg-[#4361EE]",
@@ -42,7 +42,7 @@ const offers: Offer[] = [
     id: 3,
     title: "Family Vacation Package",
     description: "Special rates for families. Children under 12 fly at 50% off.",
-    image: "https://images.unsplash.com/photo-1517400508447-f8dd518b86db?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    image: "https://www.qatarairways.com/content/dam/images/renditions/square/campaigns/qatar/visit-qatar/s-qatar-stopver-beach-800.jpg",
     badge: {
       text: "FAMILY",
       color: "bg-[#138808]",

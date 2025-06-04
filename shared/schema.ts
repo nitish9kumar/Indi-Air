@@ -65,3 +65,21 @@ export const bookingSchema = insertBookingSchema.extend({
 
 export type InsertBooking = z.infer<typeof insertBookingSchema>;
 export type Booking = typeof bookings.$inferSelect;
+
+// New flight searches schema
+export const flightSearches = pgTable("flight_searches", {
+  id: serial("id").primaryKey(),
+  source: text("source").notNull(),
+  destination: text("destination").notNull(),
+  departureDate: text("departure_date").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
+export const insertFlightSearchSchema = createInsertSchema(flightSearches).pick({
+  source: true,
+  destination: true,
+  departureDate: true,
+});
+
+export type InsertFlightSearch = z.infer<typeof insertFlightSearchSchema>;
+export type FlightSearch = typeof flightSearches.$inferSelect;
