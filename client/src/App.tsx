@@ -13,7 +13,7 @@ import SeatSelection from "./components/SeatSelection";
 import PaymentPageWrapper from "./pages/PaymentPageWrapper";
 import BookingConfirmation from "./components/BookingConfirmation";
 import Layout from "./components/Layout";
-import PageTracker from "./components/PageTracker";
+//import PageTracker from "./components/PageTracker";
 
 function Router() {
   return (
@@ -43,7 +43,6 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <PageTracker />
       <TooltipProvider>
         <Toaster />
         <Router />
