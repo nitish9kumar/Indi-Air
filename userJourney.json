@@ -2043,5 +2043,30 @@
     "eventType": "userJourney",
     "timestamp": "2025-06-04T11:26:58.661Z",
     "journey": []
+  },
+  {
+    "eventType": "userJourney",
+    "timestamp": "2025-06-04T11:42:25.937Z",
+    "journey": []
+  },
+  {
+    "eventType": "userJourney",
+    "timestamp": "2025-06-04T11:42:40.321Z",
+    "journey": []
+  },
+  {
+    "eventType": "userJourney",
+    "timestamp": "2025-06-05T03:29:06.251Z",
+    "journey": []
+  },
+  {
+    "eventType": "userJourney",
+    "timestamp": "2025-06-05T03:58:04.550Z",
+    "journey": []
+  },
+  {
+    "eventType": "userJourney",
+    "timestamp": "2025-06-05T04:00:11.550Z",
+    "journey": []
   }
 ]
