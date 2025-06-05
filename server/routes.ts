@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+//import { storage } from "./storage";
 import { z } from "zod";
 import { bookingSchema, insertFlightSearchSchema } from "@shared/schema";
 import { logger } from "@shared/logger"; // Assuming a logger utility exists
@@ -36,18 +36,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Create booking in storage
-      const booking = await storage.createBooking({
-        source: validatedData.source,
-        destination: validatedData.destination,
-        departureDate: validatedData.departureDate,
-        passengers: validatedData.passengers,
-        userId: validatedData.userId,
-      });
+      // const booking = await storage.createBooking({
+      //   source: validatedData.source,
+      //   destination: validatedData.destination,
+      //   departureDate: validatedData.departureDate,
+      //   passengers: validatedData.passengers,
+      //   userId: validatedData.userId,
+      // });
       
       return res.status(201).json({ 
         success: true, 
         message: "Booking created successfully", 
-        data: booking 
+        //data: booking 
       });
     } catch (error) {
       logger.error("Error in /api/bookings endpoint", {
@@ -82,18 +82,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      const booking = await storage.getBooking(id);
+      //const booking = await storage.getBooking(id);
       
-      if (!booking) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Booking not found" 
-        });
-      }
+      // if (!booking) {
+      //   return res.status(404).json({ 
+      //     success: false, 
+      //     message: "Booking not found" 
+      //   });
+      // }
       
       return res.json({ 
         success: true, 
-        data: booking 
+        //data: booking 
       });
     } catch (error) {
       return res.status(500).json({ 
@@ -116,7 +116,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Save the search data in the database
-      const search = await storage.createFlightSearch(validatedData);
+      //const search = await storage.createFlightSearch(validatedData);
 
       // Generate mock flight results (looped 5 times)
       const mockResults = Array.from({ length: 5 }, (_, index) => ({
